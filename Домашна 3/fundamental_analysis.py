@@ -3,7 +3,6 @@ import pandas as pd
 def perform_fundamental_analysis():
     print("Извршување фундаментална анализа...")
 
-    # Замислени податоци за компаниите (пример)
     data = {
         "Компанија": ["ALK", "KMB", "SILK"],
         "P/E": [15.2, 18.5, 12.8],
@@ -13,7 +12,6 @@ def perform_fundamental_analysis():
 
     df = pd.DataFrame(data)
 
-    # Прикажување на податоците
     print(df)
     print("\nСовети:")
     for index, row in df.iterrows():
