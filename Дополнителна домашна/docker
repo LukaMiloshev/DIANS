@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: financial_data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra_db
+    restart: always
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=FinancialCluster
+
+  backend:
+    build:
+      context: C:/finance-project/backend
+      dockerfile: Dockerfile
+    container_name: financial_backend
+    restart: always
+    depends_on:
+      - postgres
+      - cassandra
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:your_password@postgres_db:5432/financial_data
+      CASSANDRA_HOST: cassandra_db
+
+  frontend:
+    build:
+      context: C:/finance-project/frontend
+      dockerfile: Dockerfile
+    container_name: financial_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+	
+  volumes:
+     postgres_data:
+       driver: local
+     cassandra_data:
+       driver: local
